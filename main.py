@@ -41,8 +41,9 @@ def get_common_submissions(reddit_subs, hn_subs):
 
 def post_comment(common_subs):
     for common_sub in common_subs:
-        common_sub[0].add_comment('HN discussion: {}'.format(HN_STORY.format(common_sub[1])))
-        time.sleep(1)
+        if not any(comm for comm in common_sub.comments if REDDIT_USERNAME in str(comm.author)):
+            common_sub[0].add_comment('HN discussion: {}'.format(HN_STORY.format(common_sub[1])))
+            time.sleep(1)
 
 def main():
     reddit_subs = get_reddit_submissions()
