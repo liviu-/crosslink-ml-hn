@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import time
+import collections
 
 import praw
 import requests
@@ -11,11 +12,11 @@ from config import *
 HN_LIMIT = 100
 REDDIT_LIMIT = 50
 
-HN_TOP_URL = 'https://hacker-news.firebaseio.com/v0/topstories.json'
-HN_ITEM = 'https://hacker-news.firebaseio.com/v0/item/{}.json'
+HN_URL = "http://hn.algolia.com/api/v1/search?query={}&restrictSearchableAttributes=url" 
 HN_STORY = 'https://news.ycombinator.com/item?id={}'
 
 SLEEP_TIME = 60
+COMM_NUM_THRESHOLD = 3
 
 def get_reddit_submissions():
     r = praw.Reddit(user_agent='crosslink_hackernews')
@@ -25,33 +26,27 @@ def get_reddit_submissions():
     return [sub for sub in submissions
 	if 'reddit.com' not in sub.url]
 
-def get_hn_submissions():
-    # Makes a request for each story, but couldn't find
-    # a better way through their API
-    hn_items = [requests.get(HN_ITEM.format(id)).json()
-                for id in requests.get(HN_TOP_URL).json()[:HN_LIMIT]]
+def get_common_submissions(reddit_submissions):
+    commons = collections.defaultdict(list)
+    for sub in reddit_submissions:
+        hn_hits = requests.get(HN_URL.format(sub.url)).json()['hits']
+        for hit in hn_hits:
+            if hit['num_comments'] > COMM_NUM_THRESHOLD:
+                commons[sub].append(hit['objectID'])
+    return commons
 
-    return [(hn_story.get('url'), hn_story['id']) for hn_story in hn_items]
-
-# Couldn't find a satisfying way to normalize urls,
-def get_common_submissions(reddit_subs, hn_subs):
-    return [
-        (reddit_sub, hn_sub[1])
-        for reddit_sub in reddit_subs for hn_sub in hn_subs
-        if hn_sub[0] == reddit_sub.url
-    ]
-
-def post_comment(common_subs):
-    for common_sub in common_subs:
-        if not any(comm for comm in common_sub[0].comments if REDDIT_USERNAME in str(comm.author)):
-            common_sub[0].add_comment('HN discussion: {}'.format(HN_STORY.format(common_sub[1])))
+def post_comments(common_subs):
+    for reddit_obj, hn_ids in common_subs.items():
+	# If I didn't post here before
+        if not any(comm for comm in reddit_obj.comments if REDDIT_USERNAME in str(comm.author)):
+            hn_urls = [HN_STORY.format(hn_id) for hn_id in hn_ids]
+            reddit_obj.add_comment('HN discussion: {}'.format('\n'.join(hn_urls))
             time.sleep(SLEEP_TIME)
 
 def main():
     reddit_subs = get_reddit_submissions()
-    hn_subs = get_hn_submissions()
-    common_subs = get_common_submissions(reddit_subs, hn_subs)
-    post_comment(common_subs)
+    common_subs = get_common_submissions(reddit_subs)
+    post_comments(common_subs)
 
 if __name__ == '__main__':
     main()

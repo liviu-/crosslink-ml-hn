@@ -11,5 +11,5 @@ I may or may not add any of these, but just to write down some potential improve
 - [ ] Crosslink with /r/statistics and other subreddits
 - [ ] Crosslink from HN (do they even allow bots?)
 - [ ] Normalise URLs before checking similarity
-- [ ] Only link if HN submission has over `x` number of comments
-- [ ] Check older HN submissions too
+- [x] Only link if HN submission has over `x` number of comments
+- [x] Check older HN submissions too
