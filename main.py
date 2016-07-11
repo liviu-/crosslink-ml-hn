@@ -40,7 +40,7 @@ def post_comments(common_subs):
 	# If I didn't post here before
         if not any(comm for comm in reddit_obj.comments if REDDIT_USERNAME in str(comm.author)):
             hn_urls = [HN_STORY.format(hn_id) for hn_id in hn_ids]
-            reddit_obj.add_comment('HN discussion: {}'.format('\n'.join(hn_urls))
+            reddit_obj.add_comment('HN discussion: {}'.format('\n'.join(hn_urls)))
             time.sleep(SLEEP_TIME)
 
 def main():
