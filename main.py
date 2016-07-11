@@ -8,12 +8,14 @@ import requests
 # Import username and password
 from config import *
 
-HN_LIMIT = 50
-REDDIT_LIMIT = 25
+HN_LIMIT = 100
+REDDIT_LIMIT = 50
 
 HN_TOP_URL = 'https://hacker-news.firebaseio.com/v0/topstories.json'
 HN_ITEM = 'https://hacker-news.firebaseio.com/v0/item/{}.json'
 HN_STORY = 'https://news.ycombinator.com/item?id={}'
+
+SLEEP_TIME = 60
 
 def get_reddit_submissions():
     r = praw.Reddit(user_agent='crosslink_hackernews')
@@ -43,7 +45,7 @@ def post_comment(common_subs):
     for common_sub in common_subs:
         if not any(comm for comm in common_sub[0].comments if REDDIT_USERNAME in str(comm.author)):
             common_sub[0].add_comment('HN discussion: {}'.format(HN_STORY.format(common_sub[1])))
-            time.sleep(1)
+            time.sleep(SLEEP_TIME)
 
 def main():
     reddit_subs = get_reddit_submissions()
