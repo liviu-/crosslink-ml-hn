@@ -2,7 +2,7 @@
 
 ## Overview
 
-Reddit bot to link from /r/machinelearning submissions to to HN discussions for same URL submissions to encourage more discussion/engagement between communities.
+Reddit bot to link from /r/machinelearning submissions to HN discussions for same URL submissions to encourage more discussion/engagement between communities.
 
 
 ## To-do
