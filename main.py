@@ -6,7 +6,7 @@ import collections
 import praw
 import requests
 
-from config import REDDIT_USERNAME, REDDIT_PASS
+from config import REDDIT_USERNAME, REDDIT_PASS, USER_AGENT
 
 REDDIT_LIMIT = 50
 
@@ -19,7 +19,7 @@ COMM_NUM_THRESHOLD = 3
 
 
 def get_reddit_submissions():
-    r = praw.Reddit(user_agent='crosslink_hackernews')
+    r = praw.Reddit(user_agent=USER_AGENT)
     r.login(REDDIT_USERNAME, REDDIT_PASS, disable_warning=True)
     submissions = r.get_subreddit('machinelearning').get_hot(limit=REDDIT_LIMIT)
     return [sub for sub in submissions if 'reddit.com' not in sub.url]
