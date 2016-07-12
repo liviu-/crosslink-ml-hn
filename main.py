@@ -10,7 +10,7 @@ from config import REDDIT_USERNAME, REDDIT_PASS, USER_AGENT
 
 REDDIT_LIMIT = 50
 
-HN_ALGOLIA = "http://hn.algolia.com/api/v1/search?query={}&restrictSearchableAttributes=url" 
+HN_ALGOLIA = "http://hn.algolia.com/api/v1/search?query={}&restrictSearchableAttributes=url&typoTolerance=false" 
 HN_STORY = 'https://news.ycombinator.com/item?id={}'
 
 SLEEP_TIME = 60
