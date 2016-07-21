@@ -28,10 +28,14 @@ def get_reddit_submissions():
 def get_common_submissions(reddit_submissions):
     commons = collections.defaultdict(list)
     for sub in reddit_submissions:
-        hn_hits = requests.get(HN_ALGOLIA.format(sub.url)).json()['hits']
-        for hit in hn_hits:
-            if hit['num_comments'] > COMM_NUM_THRESHOLD:
-                commons[sub].append(hit['objectID'])
+        try:
+            hn_hits = requests.get(HN_ALGOLIA.format(sub.url)).json()['hits']
+        except KeyError:
+            continue
+        if hn_hits:
+            for hit in hn_hits:
+                if hit['num_comments'] > COMM_NUM_THRESHOLD:
+                    commons[sub].append(hit['objectID'])
     return commons
 
 
