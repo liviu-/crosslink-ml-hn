@@ -13,3 +13,7 @@ I may or may not add any of these, but just to write down some potential improve
 - [x] Normalise URLs before checking similarity
 - [x] Only link if HN submission has over `x` number of comments
 - [x] Check older HN submissions too
+- [ ] Add a notification system (but not email pls)
+    - [ ] Notify on new comment
+    - [ ] Notify on error
+    - [ ] Notify on receiving new PM/replies
