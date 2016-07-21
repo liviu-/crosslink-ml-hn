@@ -5,12 +5,13 @@ import collections
 
 import praw
 import requests
+import urltools
 
 from config import REDDIT_USERNAME, REDDIT_PASS, USER_AGENT
 
 REDDIT_LIMIT = 50
 
-HN_ALGOLIA = "http://hn.algolia.com/api/v1/search?query={}&restrictSearchableAttributes=url&typoTolerance=false" 
+HN_ALGOLIA = 'http://hn.algolia.com/api/v1/search?query={}&restrictSearchableAttributes=url' 
 HN_STORY = 'https://news.ycombinator.com/item?id={}'
 
 SLEEP_TIME = 60
@@ -28,13 +29,11 @@ def get_reddit_submissions():
 def get_common_submissions(reddit_submissions):
     commons = collections.defaultdict(list)
     for sub in reddit_submissions:
-        try:
-            hn_hits = requests.get(HN_ALGOLIA.format(sub.url)).json()['hits']
-        except KeyError:
-            continue
+        hn_hits = requests.get(HN_ALGOLIA.format(sub.url)).json().get('hits')
         if hn_hits:
             for hit in hn_hits:
-                if hit['num_comments'] > COMM_NUM_THRESHOLD:
+                if (hit['num_comments'] > COMM_NUM_THRESHOLD
+                    and urltools.compare(hit['url'], sub.url)):
                     commons[sub].append(hit['objectID'])
     return commons
 
