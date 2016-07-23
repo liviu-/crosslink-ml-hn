@@ -20,22 +20,45 @@ COMM_NUM_THRESHOLD = 3
 
 
 def get_reddit_submissions():
+    """Downloads top `REDDIT_LIMIT` submissions from the /r/machinelearning subreddit.
+
+    Uses Reddit API to get the hottest submissions. Expects `USER_AGENT`,
+    `REDDIT_USERNAME`, and `REDDIT_PASS` in the function scope.
+
+    Returns:
+	list: List of relevant praw.orjects.Submission
+    """
+
+
     r = praw.Reddit(user_agent=USER_AGENT)
     r.login(REDDIT_USERNAME, REDDIT_PASS, disable_warning=True)
     submissions = r.get_subreddit('machinelearning').get_hot(limit=REDDIT_LIMIT)
     return [sub for sub in submissions if 'reddit.com' not in sub.url]
 
 
-def get_common_submissions(reddit_submissions):
-    commons = collections.defaultdict(list)
-    for sub in reddit_submissions:
-        hn_hits = requests.get(HN_ALGOLIA.format(sub.url)).json().get('hits')
-        if hn_hits:
-            for hit in hn_hits:
-                if (hit['num_comments'] > COMM_NUM_THRESHOLD
-                    and urltools.compare(hit['url'], sub.url)):
-                    commons[sub].append(hit['objectID'])
-    return commons
+def get_common_submissions(reddit_submissions, min_comments=COMM_NUM_THRESHOLD):
+    """Filters common HN and /r/machinelearning submissions
+
+    The function calls the queries the Algolia API for each URL
+    in the submissions provided and provides the HN IDs for submissions 
+    that have more than `min_comments` comments,
+
+    Args:
+        reddit_submissions (iter): Iterable containing `praw` submission objects
+        min_comments (int, optional) Minimum number of comments to consider a HN
+            submission. The default value is taken from the module constant 
+            `COMM_NUM_THRESHOLD`
+
+    Returns:
+        dict: A dict mapping `praw` submission objects to HN story IDs
+    """
+
+
+    # TODO Expand to loops for readability 
+    return {reddit_sub:hit['objectID'] for reddit_sub in reddit_submissions
+            for hit in requests.get(HN_ALGOLIA.format(reddit_sub.url)).json().get('hits', [])
+            if hit['num_comments'] > COMM_NUM_THRESHOLD
+            and urltools.compare(hit['url'], reddit_sub.url)}
 
 
 def post_comments(common_subs):
