@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+"""Reddit bot that links to HN submissions
+
+The bot checks the top submissions on /r/machinelearning
+and compares the links against all HN submissions using the
+Algolia API. The bot posts a new top-level reply if there is 
+a relatively active match and links to the HN thread.
+"""
 
 import time
 import collections
@@ -15,18 +22,18 @@ HN_ALGOLIA = 'http://hn.algolia.com/api/v1/search?query={}&restrictSearchableAtt
 HN_STORY = 'https://news.ycombinator.com/item?id={}'
 
 SLEEP_TIME = 60
-# Minimum number of comments of an HN story to be linked
+# Minimum number of comments of an HN story to be considered
 COMM_NUM_THRESHOLD = 3
 
 
 def get_reddit_submissions():
-    """Downloads top `REDDIT_LIMIT` submissions from the /r/machinelearning subreddit.
+    """Download top `REDDIT_LIMIT` submissions from the /r/machinelearning subreddit.
 
     Uses Reddit API to get the hottest submissions. Expects `USER_AGENT`,
     `REDDIT_USERNAME`, and `REDDIT_PASS` in the function scope.
 
     Returns:
-	list: List of relevant praw.orjects.Submission
+	list: List of relevant praw.orjects.Submission.
     """
 
 
@@ -37,20 +44,20 @@ def get_reddit_submissions():
 
 
 def get_common_submissions(reddit_submissions, min_comments=COMM_NUM_THRESHOLD):
-    """Filters common HN and /r/machinelearning submissions
+    """Filter common HN and /r/machinelearning submissions.
 
-    The function calls the queries the Algolia API for each URL
-    in the submissions provided and provides the HN IDs for submissions 
-    that have more than `min_comments` comments,
+    The function queries the Algolia API for each URL
+    in the submissions provided and fetches the HN IDs for submissions 
+    that have more than `min_comments` comments.
 
     Args:
-        reddit_submissions (iter): Iterable containing `praw` submission objects
+        reddit_submissions (iter): Iterable containing `praw` submission objects.
         min_comments (int, optional) Minimum number of comments to consider a HN
             submission. The default value is taken from the module constant 
-            `COMM_NUM_THRESHOLD`
+            `COMM_NUM_THRESHOLD`.
 
     Returns:
-        dict: A dict mapping `praw` submission objects to HN story IDs
+        dict: A dict mapping `praw` submission objects to HN story IDs.
     """
 
 
@@ -62,6 +69,13 @@ def get_common_submissions(reddit_submissions, min_comments=COMM_NUM_THRESHOLD):
 
 
 def post_comments(common_subs):
+    """Post comments on Reddit.
+
+    Posts `len(common_subs)` comments every `SLEEP_TIME` seconds. 
+
+    Args:
+        common_subs (dict): Maps `praw` submission objects to HN story IDs.
+    """
     for reddit_obj, hn_ids in common_subs.items():
 	# If I didn't post here before
         if not any(comm for comm in reddit_obj.comments if REDDIT_USERNAME in str(comm.author)):
