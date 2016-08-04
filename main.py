@@ -35,8 +35,6 @@ def get_reddit_submissions():
     Returns:
 	list: List of relevant praw.orjects.Submission.
     """
-
-
     r = praw.Reddit(user_agent=USER_AGENT)
     r.login(REDDIT_USERNAME, REDDIT_PASS, disable_warning=True)
     submissions = r.get_subreddit('machinelearning').get_hot(limit=REDDIT_LIMIT)
@@ -59,8 +57,6 @@ def get_common_submissions(reddit_submissions, min_comments=COMM_NUM_THRESHOLD):
     Returns:
         dict: A dict mapping `praw` submission objects to HN story IDs.
     """
-
-
     # TODO Expand to loops for readability 
     return {reddit_sub:hit['objectID'] for reddit_sub in reddit_submissions
             for hit in requests.get(HN_ALGOLIA.format(reddit_sub.url)).json().get('hits', [])
