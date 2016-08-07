@@ -57,11 +57,24 @@ def get_common_submissions(reddit_submissions, min_comments=COMM_NUM_THRESHOLD):
     Returns:
         dict: A dict mapping `praw` submission objects to HN story IDs.
     """
-    # TODO Expand to loops for readability 
+    common_subs = collections.defaultdict(list)
+
+    for reddit_sub in reddit_submissions:
+        for hit in requests.get(HN_ALGOLIA.format(reddit_sub.url)).json().get('hits'):
+            try:
+                if hit['num_comments'] > COMM_NUM_THRESHOLD and urltools.compare(hit['url'], reddit_sub.url):
+                    common_subs[reddit_sub].append(hit['objectID'])
+            # `hit['num_comments'] may return `None`
+            except TypeError:
+                continue
+    return common_subs
+
+"""
     return {reddit_sub:hit['objectID'] for reddit_sub in reddit_submissions
-            for hit in requests.get(HN_ALGOLIA.format(reddit_sub.url)).json().get('hits', [])
-            if hit['num_comments'] > COMM_NUM_THRESHOLD
-            and urltools.compare(hit['url'], reddit_sub.url)}
+        for hit in requests.get(HN_ALGOLIA.format(reddit_sub.url)).json().get('hits', [])
+        if hit['num_comments'] > COMM_NUM_THRESHOLD
+        and urltools.compare(hit['url'], reddit_sub.url)}
+        """
 
 
 def post_comments(common_subs):
