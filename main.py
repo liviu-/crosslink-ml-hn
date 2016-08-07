@@ -69,13 +69,6 @@ def get_common_submissions(reddit_submissions, min_comments=COMM_NUM_THRESHOLD):
                 continue
     return common_subs
 
-"""
-    return {reddit_sub:hit['objectID'] for reddit_sub in reddit_submissions
-        for hit in requests.get(HN_ALGOLIA.format(reddit_sub.url)).json().get('hits', [])
-        if hit['num_comments'] > COMM_NUM_THRESHOLD
-        and urltools.compare(hit['url'], reddit_sub.url)}
-        """
-
 
 def post_comments(common_subs):
     """Post comments on Reddit.
