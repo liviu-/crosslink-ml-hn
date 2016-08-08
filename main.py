@@ -35,7 +35,7 @@ def get_reddit_submissions():
     `REDDIT_USERNAME`, and `REDDIT_PASS` in the function scope.
 
     Returns:
-	list: List of relevant praw.orjects.Submission.
+	list: List of relevant praw.objects.Submission.
     """
     r = praw.Reddit(user_agent=USER_AGENT)
     r.login(REDDIT_USERNAME, REDDIT_PASS, disable_warning=True)
@@ -80,31 +80,34 @@ def prepare_comment(hn_hits):
 
     Args:
         hn_hits: List of dictionaries containing data
-            about the HN hits
+            about the HN hits.
 
     Returns:
         str: Formatted comment.
     """
     header = 'HN discussion: '
     if len(hn_hits) == 1:
-        hn_link = HN_STORY.format(hn_hits[0]['objectID'])
-        return header + hn_link
+        return header + HN_STORY.format(hn_hits[0]['objectID'])
     else:
         # Change the header to use plural form
         header = re.sub(':', 's:', header)
         header += '\n\n'
+
         hit_strings = []
         for hit in hn_hits:
             hit_date = datetime.fromtimestamp(hit['created_at_i']).date()
             today = datetime.today().date()
+            # Use human readable format for date
             if hit_date == today:
                 hit_date_human = 'today'
             else:
                 days_ago = (today - hit_date).days
                 plural_suffix = 's' if days_ago > 1 else ''
                 hit_date_human = '{} day{} ago'.format(days_ago, plural_suffix)
+
             url = HN_STORY.format(hit['objectID']) 
             hit_strings.append('{} ({})'.format(url, hit_date_human))
+
     return header + '\n\n'.join(hit_strings)
 
 
