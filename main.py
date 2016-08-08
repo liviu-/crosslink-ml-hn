@@ -7,8 +7,10 @@ Algolia API. The bot posts a new top-level reply if there is
 a relatively active match and links to the HN thread.
 """
 
+import re
 import time
 import collections
+from datetime import datetime
 
 import praw
 import requests
@@ -55,7 +57,7 @@ def get_common_submissions(reddit_submissions, min_comments=COMM_NUM_THRESHOLD):
             `COMM_NUM_THRESHOLD`.
 
     Returns:
-        dict: A dict mapping `praw` submission objects to HN story IDs.
+        dict: A dict mapping `praw` submission objects to HN hit objects
     """
     common_subs = collections.defaultdict(list)
 
@@ -63,11 +65,47 @@ def get_common_submissions(reddit_submissions, min_comments=COMM_NUM_THRESHOLD):
         for hit in requests.get(HN_ALGOLIA.format(reddit_sub.url)).json().get('hits'):
             try:
                 if hit['num_comments'] > COMM_NUM_THRESHOLD and urltools.compare(hit['url'], reddit_sub.url):
-                    common_subs[reddit_sub].append(hit['objectID'])
+                    common_subs[reddit_sub].append(hit)
             # `hit['num_comments'] may return `None`
             except TypeError:
                 continue
     return common_subs
+
+
+def prepare_comment(hn_hits):
+    """Format the comment from the HN hits
+
+    Comments may get more complex when there are multiple 
+    hits, so this function tries to format it neatly.
+
+    Args:
+        hn_hits: List of dictionaries containing data
+            about the HN hits
+
+    Returns:
+        str: Formatted comment.
+    """
+    header = 'HN discussion: '
+    if len(hn_hits) == 1:
+        hn_link = HN_STORY.format(hn_hits[0]['objectID'])
+        return header + hn_link
+    else:
+        # Change the header to use plural form
+        header = re.sub(':', 's:', header)
+        header += '\n\n'
+        hit_strings = []
+        for hit in hn_hits:
+            hit_date = datetime.fromtimestamp(hit['created_at_i']).date()
+            today = datetime.today().date()
+            if hit_date == today:
+                hit_date_human = 'today'
+            else:
+                days_ago = (today - hit_date).days
+                plural_suffix = 's' if days_ago > 1 else ''
+                hit_date_human = '{} day{} ago'.format(days_ago, plural_suffix)
+            url = HN_STORY.format(hit['objectID']) 
+            hit_strings.append('{} ({})'.format(url, hit_date_human))
+    return header + '\n\n'.join(hit_strings)
 
 
 def post_comments(common_subs):
@@ -76,13 +114,13 @@ def post_comments(common_subs):
     Posts `len(common_subs)` comments every `SLEEP_TIME` seconds. 
 
     Args:
-        common_subs (dict): Maps `praw` submission objects to HN story IDs.
+        common_subs (dict): Maps `praw` submission objects to HN hit objects.
     """
-    for reddit_obj, hn_ids in common_subs.items():
+    for reddit_obj, hn_hits in common_subs.items():
 	# If I didn't post here before
         if not any(comm for comm in reddit_obj.comments if REDDIT_USERNAME in str(comm.author)):
-            hn_urls = [HN_STORY.format(hn_id) for hn_id in hn_ids]
-            reddit_obj.add_comment('HN discussion: {}'.format('\n'.join(hn_urls)))
+            comment = prepare_comment(hn_hits)
+            reddit_obj.add_comment(comment)
             time.sleep(SLEEP_TIME)
 
 def main():
