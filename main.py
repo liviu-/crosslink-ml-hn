@@ -71,6 +71,22 @@ def get_common_submissions(reddit_submissions, min_comments=COMM_NUM_THRESHOLD):
                 continue
     return common_subs
 
+def parse_date(date):
+    """Parse date to human readable format
+
+    Args:
+        date: `datetime.date` object
+    Returns:
+        str: human readable relative time
+    """
+    today = datetime.today().date()
+    if date == today:
+        return 'today'
+    else:
+        days_ago = (today - date).days
+        plural_suffix = 's' if days_ago > 1 else ''
+        return '{} day{} ago'.format(days_ago, plural_suffix)
+
 
 def prepare_comment(hn_hits):
     """Format the comment from the HN hits
@@ -96,15 +112,7 @@ def prepare_comment(hn_hits):
         hit_strings = []
         for hit in hn_hits:
             hit_date = datetime.fromtimestamp(hit['created_at_i']).date()
-            today = datetime.today().date()
-            # Use human readable format for date
-            if hit_date == today:
-                hit_date_human = 'today'
-            else:
-                days_ago = (today - hit_date).days
-                plural_suffix = 's' if days_ago > 1 else ''
-                hit_date_human = '{} day{} ago'.format(days_ago, plural_suffix)
-
+            hit_date_human = parse_date(hit_date)
             url = HN_STORY.format(hit['objectID']) 
             hit_strings.append('{} ({})'.format(url, hit_date_human))
 
