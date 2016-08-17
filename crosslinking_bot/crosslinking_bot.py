@@ -16,7 +16,9 @@ import praw
 import requests
 import urltools
 
-from config import REDDIT_USERNAME, REDDIT_PASS, USER_AGENT
+from .config import REDDIT_USERNAME, REDDIT_PASS, USER_AGENT
+
+DEBUG = False
 
 REDDIT_LIMIT = 50
 
@@ -62,7 +64,7 @@ def get_common_submissions(reddit_submissions, min_comments=COMM_NUM_THRESHOLD):
     common_subs = collections.defaultdict(list)
 
     for reddit_sub in reddit_submissions:
-        for hit in requests.get(HN_ALGOLIA.format(reddit_sub.url)).json().get('hits'):
+        for hit in requests.get(HN_ALGOLIA.format(reddit_sub.url)).json().get('hits', []):
             try:
                 if hit['num_comments'] > COMM_NUM_THRESHOLD and urltools.compare(hit['url'], reddit_sub.url):
                     common_subs[reddit_sub].append(hit)
@@ -131,13 +133,10 @@ def post_comments(common_subs):
 	# If I didn't post here before
         if not any(comm for comm in reddit_obj.comments if REDDIT_USERNAME in str(comm.author)):
             comment = prepare_comment(hn_hits)
-            reddit_obj.add_comment(comment)
+            #reddit_obj.add_comment(comment)
             time.sleep(SLEEP_TIME)
 
-def main():
+def run_bot():
     reddit_subs = get_reddit_submissions()
     common_subs = get_common_submissions(reddit_subs)
     post_comments(common_subs)
-
-if __name__ == '__main__':
-    main()
