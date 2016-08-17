@@ -133,7 +133,7 @@ def post_comments(common_subs):
 	# If I didn't post here before
         if not any(comm for comm in reddit_obj.comments if REDDIT_USERNAME in str(comm.author)):
             comment = prepare_comment(hn_hits)
-            #reddit_obj.add_comment(comment)
+            reddit_obj.add_comment(comment)
             time.sleep(SLEEP_TIME)
 
 def run_bot():
