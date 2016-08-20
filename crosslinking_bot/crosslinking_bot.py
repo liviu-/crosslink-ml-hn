@@ -66,7 +66,7 @@ def get_common_submissions(reddit_submissions, min_comments=COMM_NUM_THRESHOLD):
     for reddit_sub in reddit_submissions:
         for hit in requests.get(HN_ALGOLIA.format(reddit_sub.url)).json().get('hits', []):
             try:
-                if hit['num_comments'] > COMM_NUM_THRESHOLD and urltools.compare(hit['url'], reddit_sub.url):
+                if hit['num_comments'] > min_comments and urltools.compare(hit['url'], reddit_sub.url):
                     common_subs[reddit_sub].append(hit)
             # `hit['num_comments'] may return `None`
             except TypeError:
