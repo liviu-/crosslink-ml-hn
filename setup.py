@@ -21,7 +21,7 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'crosslinking_bot = crosslinking_bot.__main__:main'
+            'crosslinking_bot = crosslinking_bot.crosslinking_bot:run_bot'
         ]
     },
     install_requires=[
