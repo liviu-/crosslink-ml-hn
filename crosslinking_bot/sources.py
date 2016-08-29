@@ -7,7 +7,8 @@ import collections
 from abc import ABCMeta, abstractmethod
 
 import requests
-import urltools
+
+from . import utils
 
 MIN_ACTIVITY = 3
 
@@ -62,8 +63,8 @@ class HN(Source):
         for reddit_sub in self.reddit_subs:
             for hit in requests.get(self._hn_algolia.format(reddit_sub.url)).json().get('hits', []):
                 try:
-                    if (hit['num_comments'] > self.min_activity and
-                        urltools.compare(hit['url'], reddit_sub.url)):
+                    if (hit['num_comments'] > self.min_activity and 
+                        utils.same_url(hit['url'], reddit_sub.url)):
                         common_subs[reddit_sub].append(hit)
                 # `hit['num_comments'] may return `None`
                 except TypeError:
