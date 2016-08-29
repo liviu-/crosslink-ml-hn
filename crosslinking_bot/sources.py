@@ -9,28 +9,24 @@ from abc import ABCMeta, abstractmethod
 import requests
 import urltools
 
+MIN_ACTIVITY = 3
+
 
 class Source(object):
     """Abstract clas for discussion sources to subclass
     
     There is some common functionality between different
     sources, so this serves as a starting point for them.
-    
-    Args:
-        min_activity: Minimum activity of a discussion to be
-            considered for crosslinking.
     """
     __metaclass__ = ABCMeta
 
-    min_activity = 3
-
-    def __init__(self, reddit_submissions, min_activity=min_activity):
+    def __init__(self, reddit_submissions, min_activity=MIN_ACTIVITY):
         """Constructor to store shared variables for different sources
 
         Args:
             self.reddit_submissions (iter): Iterable containing `praw` submission objects.
             self.min_comments (int, optional) Minimum number of comments to consider a 
-                submission. The default value is taken from the class variable `min_activity`.
+                submission.
         """
         self.reddit_subs = reddit_submissions
         self.min_activity = min_activity
@@ -75,7 +71,7 @@ class HN(Source):
         return common_subs
 
 class RedditStats(Source):
-    """/r/statistics source
-    """
+    """/r/statistics source """
+
     def get_common_submissions(self):
         pass
