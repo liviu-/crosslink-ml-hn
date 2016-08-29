@@ -14,7 +14,6 @@ from datetime import datetime
 
 import praw
 import requests
-import urltools
 
 from .sources import HN
 from .config import REDDIT_USERNAME, REDDIT_PASS, USER_AGENT
