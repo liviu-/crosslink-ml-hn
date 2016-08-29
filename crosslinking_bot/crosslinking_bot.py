@@ -14,8 +14,8 @@ from datetime import datetime
 
 import praw
 import requests
-import urltools
 
+from .sources import HN
 from .config import REDDIT_USERNAME, REDDIT_PASS, USER_AGENT
 
 DEBUG = False
@@ -45,33 +45,23 @@ def get_reddit_submissions():
     return [sub for sub in submissions if 'reddit.com' not in sub.url]
 
 
-def get_common_submissions(reddit_submissions, min_comments=COMM_NUM_THRESHOLD):
-    """Filter common HN and /r/machinelearning submissions.
+def get_common_submissions(reddit_submissions, min_activity=COMM_NUM_THRESHOLD):
+    """Get common submissions from various sources
 
-    The function queries the Algolia API for each URL
-    in the submissions provided and fetches the HN IDs for submissions 
-    that have more than `min_comments` comments.
+    The function finds submissions to crosslink that are relevant to
+    the submissoins provided. At the moment, only Hacker News is 
+    considered.
 
     Args:
         reddit_submissions (iter): Iterable containing `praw` submission objects.
-        min_comments (int, optional) Minimum number of comments to consider a HN
-            submission. The default value is taken from the module constant 
+        min_activity (int, optional) Minimum number of comments to consider a
+            submission. Default value is taken from the module-level constant
             `COMM_NUM_THRESHOLD`.
-
     Returns:
         dict: A dict mapping `praw` submission objects to HN hit objects
     """
-    common_subs = collections.defaultdict(list)
-
-    for reddit_sub in reddit_submissions:
-        for hit in requests.get(HN_ALGOLIA.format(reddit_sub.url)).json().get('hits', []):
-            try:
-                if hit['num_comments'] > min_comments and urltools.compare(hit['url'], reddit_sub.url):
-                    common_subs[reddit_sub].append(hit)
-            # `hit['num_comments'] may return `None`
-            except TypeError:
-                continue
-    return common_subs
+    hn = HN(reddit_submissions, min_activity)
+    return hn.get_common_submissions()
 
 def parse_date(date):
     """Parse date to human readable format

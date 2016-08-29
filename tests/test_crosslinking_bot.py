@@ -4,6 +4,7 @@ from datetime import date, timedelta
 import pytest
 
 from crosslinking_bot import crosslinking_bot as cb
+from crosslinking_bot import utils
 
 
 # Test `cb.parse_date()`
@@ -47,3 +48,13 @@ def test_two_hits_contain_second_url(hn_hits):
 def test_two_hits_contain_plural_form(hn_hits):
     hn_url = cb.HN_STORY.format(hn_hits[1]['objectID'])
     assert 'discussions' in cb.prepare_comment(hn_hits)
+
+def test_same_url_even_if_fragment_differs():
+    url1 = 'https://example.com/somtehing#nothing'
+    url2 = 'https://example.com/somtehing'
+    assert utils.same_url(url1, url2) is True
+
+def test_different_urls():
+    url1 = 'https://example1.com/somtehing#nothing'
+    url2 = 'https://example2.com/somtehing'
+    assert utils.same_url(url1, url2) is False
