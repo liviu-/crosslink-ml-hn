@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The versioning process follows a scheme somewhat based on [Semantic Versioning](http://semver.org/), and the CHANGELOG.md format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.0.3] - 2016-08-29
+
+### Fixed
+- If the path is simply 'blog', then the URL fragments are considered when differentiating between the links. This accommodates DeepMind URL scheme and hopefully others as well.
+
 ## [0.0.2] - 2016-08-29
 
 ### Fixed
