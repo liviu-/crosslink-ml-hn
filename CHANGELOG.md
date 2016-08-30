@@ -11,6 +11,7 @@ The versioning process follows a scheme somewhat based on [Semantic Versioning](
 
 ### Added
 - Added a `--version` CLI argument to the tool
+- Added some special rules for arXiv URLs to match slightly different links
 
 ## [0.0.2] - 2016-08-29
 
