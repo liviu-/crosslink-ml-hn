@@ -58,3 +58,23 @@ def test_different_urls():
     url1 = 'https://example1.com/somtehing#nothing'
     url2 = 'https://example2.com/somtehing'
     assert utils.same_url(url1, url2) is False
+
+def test_different_urls_different_fragment_path_is_blog():
+    url1 = 'https://example.com/blog#one-example'
+    url2 = 'https://example.com/blog#two-example'
+    assert utils.same_url(url1, url2) is False
+
+def test_same_urls_same_fragment_path_is_blog():
+    url1 = 'https://example.com/blog#one-example'
+    url2 = 'https://example.com/blog#one-example'
+    assert utils.same_url(url1, url2) is True
+
+def test_same_urls_same_fragment_longer_path():
+    url1 = 'https://example.com/blog/something#one-example'
+    url2 = 'https://example.com/blog/something#two-example'
+    assert utils.same_url(url1, url2) is True
+
+def test_different_urls_different_fragment_longer_path():
+    url1 = 'https://example.com/blog/something#one-example'
+    url2 = 'https://example.com/blog/something#one-example'
+    assert utils.same_url(url1, url2) is True
