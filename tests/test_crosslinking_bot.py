@@ -74,7 +74,29 @@ def test_same_urls_same_fragment_longer_path():
     url2 = 'https://example.com/blog/something#two-example'
     assert utils.same_url(url1, url2) is True
 
-def test_different_urls_different_fragment_longer_path():
+def test_same_urls_different_fragment_longer_path():
     url1 = 'https://example.com/blog/something#one-example'
     url2 = 'https://example.com/blog/something#one-example'
+    assert utils.same_url(url1, url2) is True
+
+def test_arxiv_same_resource_abs_pdf():
+    url1 = 'https://arxiv.org/abs/1608.03282'
+    url2 = 'https://arxiv.org/pdf/1608.03282.pdf'
+    assert utils.same_url(url1, url2) is True
+
+def test_arxiv_same_resource_ftp_abs():
+    url1 = 'https://arxiv.org/ftp/arxiv/papers/1608/1608.03282.pdf'
+    url2 = 'https://arxiv.org/abs/1608.03282'
+    assert utils.same_url(url1, url2) is True
+
+def test_arxiv_same_resource_abs_pdf_different_versions():
+    # It's questionable whether those 2 refer to the same resource
+    url1 = 'https://arxiv.org/abs/1608.03282'
+    url2 = 'https://arxiv.org/pdf/1608.03282v2.pdf'
+    assert utils.same_url(url1, url2) is True
+
+def test_arxiv_same_resource_pdf_different_versions():
+    # It's questionable whether those 2 refer to the same resource
+    url1 = 'https://arxiv.org/pdf/1608.03282.pdf'
+    url2 = 'https://arxiv.org/pdf/1608.03282v2.pdf'
     assert utils.same_url(url1, url2) is True
