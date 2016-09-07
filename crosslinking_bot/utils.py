@@ -1,7 +1,6 @@
 import re
 
 import urltools
-from urllib.parse import urlparse
 from urllib import parse
 
 
@@ -24,8 +23,8 @@ def same_url(url1, url2):
     arxiv_exception = 'arxiv.org'
     plos_exception = 'journals.plos.org'
 
-    _, netloc1, path1, params1, query1, fragment1 = urlparse(url1)
-    _, netloc2, path2, params2, query2, fragment2 = urlparse(url2)
+    _, netloc1, path1, params1, query1, fragment1 = parse.urlparse(url1)
+    _, netloc2, path2, params2, query2, fragment2 = parse.urlparse(url2)
     # If the path is simply 'blog', judge from the fragment
     if netloc1 == netloc2 and path1 == path2 == exception_path:
         return fragment1 == fragment2
