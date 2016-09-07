@@ -2,6 +2,7 @@ import re
 
 import urltools
 from urllib.parse import urlparse
+from urllib import parse
 
 
 def same_url(url1, url2):
@@ -21,6 +22,7 @@ def same_url(url1, url2):
     """
     exception_path = '/blog'
     arxiv_exception = 'arxiv.org'
+    plos_exception = 'journals.plos.org'
 
     _, netloc1, path1, params1, query1, fragment1 = urlparse(url1)
     _, netloc2, path2, params2, query2, fragment2 = urlparse(url2)
@@ -31,5 +33,8 @@ def same_url(url1, url2):
     elif netloc1 == netloc2 == arxiv_exception:
         regex = '([^/a-z]+\.[^/a-z.]+)'
         return re.findall(regex, path1) == re.findall(regex, path2)
+    # If it's on PLOS, compare the query
+    elif netloc1 == netloc2 == plos_exception:
+        return parse.unquote(query1) ==  parse.unquote(query2)
     else:
         return urltools.compare(netloc1 + path1, netloc2 + path2)

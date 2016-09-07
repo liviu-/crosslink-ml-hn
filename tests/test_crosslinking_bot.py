@@ -100,3 +100,18 @@ def test_arxiv_same_resource_pdf_different_versions():
     url1 = 'https://arxiv.org/pdf/1608.03282.pdf'
     url2 = 'https://arxiv.org/pdf/1608.03282v2.pdf'
     assert utils.same_url(url1, url2) is True
+
+def test_plos_different_resource_same_base_query():
+    url1 = 'http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004485'
+    url2 = 'http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004961'
+    assert utils.same_url(url1, url2) is False
+
+def test_plos_same_resource():
+    url1 = 'http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004485'
+    url2 = 'http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004485'
+    assert utils.same_url(url1, url2) is True
+
+def test_plos_same_resource_different_encoding():
+    url1 = 'http://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0141854'
+    url2 = 'http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0141854'
+    assert utils.same_url(url1, url2) is True

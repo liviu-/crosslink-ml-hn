@@ -4,10 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The versioning process follows a scheme somewhat based on [Semantic Versioning](http://semver.org/), and the CHANGELOG.md format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.1.2] - 2016-09-07
+
+### Fixed
+- Added anoter exception for PLOS journals because they also encode the article ID in GET params (issue [#16](https://github.com/liviu-/crosslink-ml-hn/issues/16))
+
 ## [0.1.1] - 2016-08-29
 
 ### Fixed
--- Readd `config.py` to pass CI tests
+-- Added `config.py` back to pass CI tests
 
 ## [0.1.0] - 2016-08-29
 
@@ -28,6 +33,7 @@ The versioning process follows a scheme somewhat based on [Semantic Versioning](
 Initial release
 
 
+[0.1.2]: https://github.com/liviu-/crosslink-ml-hn/compare/v0.1.0...v0.1.2
 [0.1.1]: https://github.com/liviu-/crosslink-ml-hn/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/liviu-/crosslink-ml-hn/compare/v0.0.2...v0.1.0
 [0.0.2]: https://github.com/liviu-/crosslink-ml-hn/compare/v0.0.1...v0.0.2
