@@ -4,10 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The versioning process follows a scheme somewhat based on [Semantic Versioning](http://semver.org/), and the CHANGELOG.md format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [Unreleased]
+
+### Fixed
+- Added anoter exception for PLOS journals because they also encode the article ID in GET params (issue [#16](https://github.com/liviu-/crosslink-ml-hn/issues/16))
+
 ## [0.1.1] - 2016-08-29
 
 ### Fixed
--- Readd `config.py` to pass CI tests
+-- Added `config.py` back to pass CI tests
 
 ## [0.1.0] - 2016-08-29
 
