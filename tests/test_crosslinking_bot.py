@@ -59,26 +59,6 @@ def test_different_urls():
     url2 = 'https://example2.com/somtehing'
     assert utils.same_url(url1, url2) is False
 
-def test_different_urls_different_fragment_path_is_blog():
-    url1 = 'https://example.com/blog#one-example'
-    url2 = 'https://example.com/blog#two-example'
-    assert utils.same_url(url1, url2) is False
-
-def test_same_urls_same_fragment_path_is_blog():
-    url1 = 'https://example.com/blog#one-example'
-    url2 = 'https://example.com/blog#one-example'
-    assert utils.same_url(url1, url2) is True
-
-def test_same_urls_same_fragment_longer_path():
-    url1 = 'https://example.com/blog/something#one-example'
-    url2 = 'https://example.com/blog/something#two-example'
-    assert utils.same_url(url1, url2) is True
-
-def test_same_urls_different_fragment_longer_path():
-    url1 = 'https://example.com/blog/something#one-example'
-    url2 = 'https://example.com/blog/something#one-example'
-    assert utils.same_url(url1, url2) is True
-
 def test_arxiv_same_resource_abs_pdf():
     url1 = 'https://arxiv.org/abs/1608.03282'
     url2 = 'https://arxiv.org/pdf/1608.03282.pdf'
@@ -115,3 +95,8 @@ def test_plos_same_resource_different_encoding():
     url1 = 'http://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0141854'
     url2 = 'http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0141854'
     assert utils.same_url(url1, url2) is True
+
+def test_different_resource_same_base_uses_id_query():
+    url1 = 'http://journals.plos.org/article?id=1000'
+    url2 = 'http://journals.plos.org/plosone/article?id=1000'
+    assert utils.same_url(url1, url2) is False

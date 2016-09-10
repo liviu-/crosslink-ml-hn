@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The versioning process follows a scheme somewhat based on [Semantic Versioning](http://semver.org/), and the CHANGELOG.md format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [Unreleased]
+
+### Changed
+- Generalised the PLOS exception into an exception that accounts for the query value if the field is `id`
+
 ## [0.1.2] - 2016-09-07
 
 ### Fixed
