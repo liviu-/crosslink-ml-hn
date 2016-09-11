@@ -7,7 +7,8 @@ The versioning process follows a scheme somewhat based on [Semantic Versioning](
 ## [Unreleased]
 
 ### Changed
-- Generalised the PLOS exception into an exception that accounts for the query value if the field is `id`
+- Simplified the URL matching scheme. The only exception right now is arXiv as DeepMind updated their blog and adding too many exceptions makes for cumbersome code. If more false positives arise, I'll try to improve then.
+- Config file is now stored in YAML format, and the path to the file is by default `$HOME/.crosslinking_config.yaml`, but it may be provided by the user via the `CROSSLINKING_CONFIG` environment variable.
 
 ## [0.1.2] - 2016-09-07
 

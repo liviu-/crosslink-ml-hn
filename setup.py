@@ -27,7 +27,7 @@ setup(
     install_requires=[
         'praw',
         'requests',
-        'ptest',
+        'pyyaml',
         'urltools'
     ],
     license='MIT',

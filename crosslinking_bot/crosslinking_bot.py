@@ -16,8 +16,9 @@ import praw
 import requests
 
 from .sources import HN
-from .config import REDDIT_USERNAME, REDDIT_PASS, USER_AGENT
+from .utils import get_config
 
+CONFIG = get_config()
 DEBUG = False
 
 REDDIT_LIMIT = 50
@@ -33,14 +34,14 @@ COMM_NUM_THRESHOLD = 3
 def get_reddit_submissions():
     """Download top `REDDIT_LIMIT` submissions from the /r/machinelearning subreddit.
 
-    Uses Reddit API to get the hottest submissions. Expects `USER_AGENT`,
-    `REDDIT_USERNAME`, and `REDDIT_PASS` in the function scope.
+    Uses Reddit API to get the hottest submissions. Expects `CONFIG`
+    in the function scope.
 
     Returns:
 	list: List of relevant praw.objects.Submission.
     """
-    r = praw.Reddit(user_agent=USER_AGENT)
-    r.login(REDDIT_USERNAME, REDDIT_PASS, disable_warning=True)
+    r = praw.Reddit(user_agent=CONFIG['agent'])
+    r.login(CONFIG['user'], CONFIG['pass'], disable_warning=True)
     submissions = r.get_subreddit('machinelearning').get_hot(limit=REDDIT_LIMIT)
     return [sub for sub in submissions if 'reddit.com' not in sub.url]
 
@@ -121,7 +122,7 @@ def post_comments(common_subs):
     """
     for reddit_obj, hn_hits in common_subs.items():
 	# If I didn't post here before
-        if not any(comm for comm in reddit_obj.comments if REDDIT_USERNAME in str(comm.author)):
+        if not any(comm for comm in reddit_obj.comments if CONFIG['user'] in str(comm.author)):
             comment = prepare_comment(hn_hits)
             reddit_obj.add_comment(comment)
             time.sleep(SLEEP_TIME)

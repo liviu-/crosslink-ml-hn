@@ -1,8 +1,13 @@
 import re
+import os
 
+import yaml
 import urltools
 from urllib import parse
 
+# Environment variable pointing to the config file
+config_environ = 'CROSSLINKING_CONFIG'
+default_path = os.path.join(os.path.expanduser("~"), '.crosslinking_config.yaml')
 
 def same_url(raw_url1, raw_url2):
     """Check if 2 URLs refer to the same primary resource
@@ -22,17 +27,17 @@ def same_url(raw_url1, raw_url2):
     arxiv_exception = 'arxiv.org'
     fragment_identifier = '#'
 
-    url1 = parse_url(raw_url1)
-    url2 = parse_url(raw_url2)
+    url1 = _parse_url(raw_url1)
+    url2 = _parse_url(raw_url2)
 
     # If it's on arxiv, do some acrobatics
     if url1['netloc'] == url2['netloc'] == arxiv_exception:
         regex = '([^/a-z]+\.[^/a-z.]+)'
         return re.findall(regex, url1['path']) == re.findall(regex, url2['path'])
     else:
-        return urltools.compare(normalize_url(raw_url1), normalize_url(raw_url2))
+        return urltools.compare(_normalize_url(raw_url1), _normalize_url(raw_url2))
 
-def parse_url(url):
+def _parse_url(url):
     """Parse URL into a dictionary"""
     url_dict = {}
 
@@ -42,6 +47,14 @@ def parse_url(url):
 
     return url_dict
 
-def normalize_url(url):
+def _normalize_url(url):
     """Remove fragment from an URL"""
     return url.split('#', 1)[0]
+
+def get_config():
+    """Read config file and return Python dictionary"""
+    config_file = os.environ.get(config_environ) or default_path
+    with open(config_file) as f:
+        config = yaml.load(f)
+    return config 
+
