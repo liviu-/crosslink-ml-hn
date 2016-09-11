@@ -51,3 +51,8 @@ def test_different_resource_same_base_uses_id_query():
     url1 = 'http://journals.plos.org/article?id=1000'
     url2 = 'http://journals.plos.org/plosone/article?id=1000'
     assert utils.same_url(url1, url2) is False
+
+def test_different_resource_same_base_uses_other_query():
+    url1 = 'http://youtube.com/watch?v=something'
+    url2 = 'http://youtube.com/watch?v=something-else'
+    assert utils.same_url(url1, url2) is False
