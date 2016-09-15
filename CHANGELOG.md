@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The versioning process follows a scheme somewhat based on [Semantic Versioning](http://semver.org/), and the CHANGELOG.md format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.2.0] - 2016-09-15
+
+### Changed
+- Simplified the URL matching scheme. The only exception right now is arXiv as DeepMind updated their blog and adding too many exceptions makes for cumbersome code. If more false positives arise, I'll try to improve then.
+- Config file is now stored in YAML format, and the path to the file is by default `$HOME/.crosslinking_config.yaml`, but it may be provided by the user via the `CROSSLINKING_CONFIG` environment variable.
+
 ## [0.1.2] - 2016-09-07
 
 ### Fixed
@@ -33,7 +39,8 @@ The versioning process follows a scheme somewhat based on [Semantic Versioning](
 Initial release
 
 
-[0.1.2]: https://github.com/liviu-/crosslink-ml-hn/compare/v0.1.0...v0.1.2
+[0.2.0]: https://github.com/liviu-/crosslink-ml-hn/compare/v0.1.2...v0.2.0
+[0.1.2]: https://github.com/liviu-/crosslink-ml-hn/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/liviu-/crosslink-ml-hn/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/liviu-/crosslink-ml-hn/compare/v0.0.2...v0.1.0
 [0.0.2]: https://github.com/liviu-/crosslink-ml-hn/compare/v0.0.1...v0.0.2

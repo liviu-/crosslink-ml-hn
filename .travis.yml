@@ -8,9 +8,16 @@ python:
     - 3.5-dev
     - nightly
 
+env:
+    - CROSSLINKING_CONFIG=crosslinking_bot/.crosslinking_config.yaml
+
+before_install:
+    - openssl aes-256-cbc -K $encrypted_f0ee6946c9aa_key -iv $encrypted_f0ee6946c9aa_iv
+      -in crosslinking_bot/.crosslinking_config.yaml.enc -out crosslinking_bot/.crosslinking_config.yaml
+      -d
+
 install:
     - pip3 install .
 
 script:
     - py.test
-

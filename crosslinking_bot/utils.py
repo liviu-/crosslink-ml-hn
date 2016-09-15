@@ -1,11 +1,15 @@
 import re
+import os
 
+import yaml
 import urltools
-from urllib.parse import urlparse
 from urllib import parse
 
+# Environment variable pointing to the config file
+config_environ = 'CROSSLINKING_CONFIG'
+default_path = os.path.join(os.path.expanduser("~"), '.crosslinking_config.yaml')
 
-def same_url(url1, url2):
+def same_url(raw_url1, raw_url2):
     """Check if 2 URLs refer to the same primary resource
 
     `urltools.compare()` fails if the 2 URLs have different fragments.
@@ -20,21 +24,37 @@ def same_url(url1, url2):
     Returns:
         bool: Whether the URLs are the same
     """
-    exception_path = '/blog'
     arxiv_exception = 'arxiv.org'
-    plos_exception = 'journals.plos.org'
+    fragment_identifier = '#'
 
-    _, netloc1, path1, params1, query1, fragment1 = urlparse(url1)
-    _, netloc2, path2, params2, query2, fragment2 = urlparse(url2)
-    # If the path is simply 'blog', judge from the fragment
-    if netloc1 == netloc2 and path1 == path2 == exception_path:
-        return fragment1 == fragment2
+    url1 = _parse_url(raw_url1)
+    url2 = _parse_url(raw_url2)
+
     # If it's on arxiv, do some acrobatics
-    elif netloc1 == netloc2 == arxiv_exception:
+    if url1['netloc'] == url2['netloc'] == arxiv_exception:
         regex = '([^/a-z]+\.[^/a-z.]+)'
-        return re.findall(regex, path1) == re.findall(regex, path2)
-    # If it's on PLOS, compare the query
-    elif netloc1 == netloc2 == plos_exception:
-        return parse.unquote(query1) ==  parse.unquote(query2)
+        return re.findall(regex, url1['path']) == re.findall(regex, url2['path'])
     else:
-        return urltools.compare(netloc1 + path1, netloc2 + path2)
+        return urltools.compare(_normalize_url(raw_url1), _normalize_url(raw_url2))
+
+def _parse_url(url):
+    """Parse URL into a dictionary"""
+    url_dict = {}
+
+    parsed_result = parse.urlparse(url)
+    for key, value in zip(parsed_result._fields, parsed_result):
+        url_dict[key] = value if key != 'query' else parse.parse_qs(value)
+
+    return url_dict
+
+def _normalize_url(url):
+    """Remove fragment from an URL"""
+    return url.split('#', 1)[0]
+
+def get_config():
+    """Read config file and return Python dictionary"""
+    config_file = os.environ.get(config_environ) or default_path
+    with open(config_file) as f:
+        config = yaml.load(f)
+    return config 
+
