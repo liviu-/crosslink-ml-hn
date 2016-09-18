@@ -10,6 +10,7 @@ a relatively active match and links to the HN thread.
 import re
 import time
 import collections
+import logging
 from datetime import datetime
 
 import praw
@@ -30,6 +31,7 @@ SLEEP_TIME = 60
 # Minimum number of comments of an HN story to be considered
 COMM_NUM_THRESHOLD = 3
 
+logging.basicConfig(filename='.log',level=logging.DEBUG)
 
 def get_reddit_submissions():
     """Download top `REDDIT_LIMIT` submissions from the /r/machinelearning subreddit.
@@ -125,6 +127,7 @@ def post_comments(common_subs):
         if not any(comm for comm in reddit_obj.comments if CONFIG['user'] in str(comm.author)):
             comment = prepare_comment(hn_hits)
             reddit_obj.add_comment(comment)
+            logging.info(comment)
             time.sleep(SLEEP_TIME)
 
 def run_bot():
