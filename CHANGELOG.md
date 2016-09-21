@@ -48,7 +48,7 @@ The versioning process follows a scheme somewhat based on [Semantic Versioning](
 Initial release
 
 
-[Unreleased]: https://github.com/liviu-/crosslink-ml-hn/compare/v0.2.0...HEAD
+[1.0.0]: https://github.com/liviu-/crosslink-ml-hn/compare/v0.2.0...v1.0.0
 [0.2.0]: https://github.com/liviu-/crosslink-ml-hn/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/liviu-/crosslink-ml-hn/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/liviu-/crosslink-ml-hn/compare/v0.1.0...v0.1.1
