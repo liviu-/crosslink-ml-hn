@@ -98,8 +98,11 @@ def prepare_comment(hn_hits):
         str: Formatted comment.
     """
     header = 'HN discussion: '
+    footer = ("\n\n - - - \n\n"  
+              "[Report a bug](https://github.com/liviu-/crosslink-ml-hn)")
+
     if len(hn_hits) == 1:
-        return header + HN_STORY.format(hn_hits[0]['objectID'])
+        return header + HN_STORY.format(hn_hits[0]['objectID']) + footer
     else:
         # Change the header to use plural form
         header = re.sub(':', 's:', header)
@@ -112,7 +115,7 @@ def prepare_comment(hn_hits):
             url = HN_STORY.format(hit['objectID']) 
             hit_strings.append('{} ({})'.format(url, hit_date_human))
 
-    return header + '\n\n'.join(hit_strings)
+    return header + '\n\n'.join(hit_strings) + footer
 
 
 def post_comments(common_subs):

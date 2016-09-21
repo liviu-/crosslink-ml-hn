@@ -6,6 +6,9 @@ The versioning process follows a scheme somewhat based on [Semantic Versioning](
 
 ## [Unreleased]
 
+### Added
+- Added a link to th GitHub page in case people want to report issues -- bugs happen and I'm not always paying attention (#10).
+
 ### Changed
 - Changed where shell arguments are parsed (at the moment, just `--version`). This makes it slower, but avoids a bug with interactin with `pytest`'s own arguments.
 
