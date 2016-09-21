@@ -10,6 +10,7 @@ a relatively active match and links to the HN thread.
 import re
 import time
 import collections
+import logging
 from datetime import datetime
 
 import praw
@@ -17,6 +18,7 @@ import requests
 
 from .sources import HN
 from .utils import get_config
+from . import parse_args
 
 CONFIG = get_config()
 DEBUG = False
@@ -30,6 +32,7 @@ SLEEP_TIME = 60
 # Minimum number of comments of an HN story to be considered
 COMM_NUM_THRESHOLD = 3
 
+logging.basicConfig(filename='.log',level=logging.DEBUG)
 
 def get_reddit_submissions():
     """Download top `REDDIT_LIMIT` submissions from the /r/machinelearning subreddit.
@@ -95,8 +98,11 @@ def prepare_comment(hn_hits):
         str: Formatted comment.
     """
     header = 'HN discussion: '
+    footer = ("\n\n - - - \n\n"  
+              "[Report a bug](https://github.com/liviu-/crosslink-ml-hn)")
+
     if len(hn_hits) == 1:
-        return header + HN_STORY.format(hn_hits[0]['objectID'])
+        return header + HN_STORY.format(hn_hits[0]['objectID']) + footer
     else:
         # Change the header to use plural form
         header = re.sub(':', 's:', header)
@@ -109,7 +115,7 @@ def prepare_comment(hn_hits):
             url = HN_STORY.format(hit['objectID']) 
             hit_strings.append('{} ({})'.format(url, hit_date_human))
 
-    return header + '\n\n'.join(hit_strings)
+    return header + '\n\n'.join(hit_strings) + footer
 
 
 def post_comments(common_subs):
@@ -125,9 +131,11 @@ def post_comments(common_subs):
         if not any(comm for comm in reddit_obj.comments if CONFIG['user'] in str(comm.author)):
             comment = prepare_comment(hn_hits)
             reddit_obj.add_comment(comment)
+            logging.info(comment)
             time.sleep(SLEEP_TIME)
 
 def run_bot():
+    parse_args()
     reddit_subs = get_reddit_submissions()
     common_subs = get_common_submissions(reddit_subs)
     post_comments(common_subs)
