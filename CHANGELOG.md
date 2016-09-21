@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The versioning process follows a scheme somewhat based on [Semantic Versioning](http://semver.org/), and the CHANGELOG.md format is based on [Keep a Changelog](http://keepachangelog.com/).
 
-## [Unreleased]
+## [1.0.0] - 2016-09-21
 
 ### Added
 - Added a link to th GitHub page in case people want to report issues -- bugs happen and I'm not always paying attention ([issue #10](https://github.com/liviu-/crosslink-ml-hn/issues/10)).
