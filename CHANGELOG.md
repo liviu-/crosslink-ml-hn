@@ -7,9 +7,10 @@ The versioning process follows a scheme somewhat based on [Semantic Versioning](
 ## [Unreleased]
 
 ### Added
-- Added a link to th GitHub page in case people want to report issues -- bugs happen and I'm not always paying attention (#10).
+- Added a link to th GitHub page in case people want to report issues -- bugs happen and I'm not always paying attention ([issue #10](https://github.com/liviu-/crosslink-ml-hn/issues/10)).
 
 ### Changed
+- **BREAKING** Not an immediately breaking change, but only Python3.5 will be tested for by Travis ([issue #17](https://github.com/liviu-/crosslink-ml-hn/issues/17))
 - Changed where shell arguments are parsed (at the moment, just `--version`). This makes it slower, but avoids a bug with interactin with `pytest`'s own arguments.
 
 ## [0.2.0] - 2016-09-15
@@ -47,6 +48,7 @@ The versioning process follows a scheme somewhat based on [Semantic Versioning](
 Initial release
 
 
+[Unreleased]: https://github.com/liviu-/crosslink-ml-hn/compare/v0.2.0...HEAD
 [0.2.0]: https://github.com/liviu-/crosslink-ml-hn/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/liviu-/crosslink-ml-hn/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/liviu-/crosslink-ml-hn/compare/v0.1.0...v0.1.1
