@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The versioning process follows a scheme somewhat based on [Semantic Versioning](http://semver.org/), and the CHANGELOG.md format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [Unreleased]
+
+### Changed
+- Changed where shell arguments are parsed (at the moment, just `--version`). This makes it slower, but avoids a bug with interactin with `pytest`'s own arguments.
+
 ## [0.2.0] - 2016-09-15
 
 ### Changed

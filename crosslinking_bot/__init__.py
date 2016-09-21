@@ -8,5 +8,3 @@ def parse_args():
                         version='%(prog)s {}'.format(__version__))
 
     return parser.parse_args()
-
-parse_args()

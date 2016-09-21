@@ -18,6 +18,7 @@ import requests
 
 from .sources import HN
 from .utils import get_config
+from . import parse_args
 
 CONFIG = get_config()
 DEBUG = False
@@ -131,6 +132,7 @@ def post_comments(common_subs):
             time.sleep(SLEEP_TIME)
 
 def run_bot():
+    parse_args()
     reddit_subs = get_reddit_submissions()
     common_subs = get_common_submissions(reddit_subs)
     post_comments(common_subs)
