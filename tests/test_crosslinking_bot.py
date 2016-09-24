@@ -58,3 +58,8 @@ def test_two_hits_github_url_exists(hn_hits):
     hn_url = cb.HN_STORY.format(hn_hits[1]['objectID'])
     commmm = (cb.prepare_comment(hn_hits))
     assert 'github' in cb.prepare_comment(hn_hits)
+
+def test_one_hit_github_url_points_to_issues(hn_hits):
+    hn_hits = [hn_hits[0]]
+    hn_url = cb.HN_STORY.format(hn_hits[0]['objectID'])
+    assert 'issues' in cb.prepare_comment(hn_hits)

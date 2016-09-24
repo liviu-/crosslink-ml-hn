@@ -99,7 +99,7 @@ def prepare_comment(hn_hits):
     """
     header = 'HN discussion: '
     footer = ("\n\n - - - \n\n"  
-              "[Report a bug](https://github.com/liviu-/crosslink-ml-hn)")
+              "[Report a bug](https://github.com/liviu-/crosslink-ml-hn/issues)")
 
     if len(hn_hits) == 1:
         return header + HN_STORY.format(hn_hits[0]['objectID']) + footer

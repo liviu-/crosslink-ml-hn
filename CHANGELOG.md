@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The versioning process follows a scheme somewhat based on [Semantic Versioning](http://semver.org/), and the CHANGELOG.md format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [Unreleased]
+
+### Changed
+- Comment was changed to link to the issues page rather than the main page of the project to be more in-line with the hyperlink text.
+
 ## [1.0.0] - 2016-09-21
 
 ### Added
