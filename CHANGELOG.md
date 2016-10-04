@@ -8,6 +8,7 @@ The versioning process follows a scheme somewhat based on [Semantic Versioning](
 
 ### Changed
 - Comment was changed to link to the issues page rather than the main page of the project to be more in-line with the hyperlink text.
+- The footer says "Have a suggestion?" instead of "Report a bug" to encourage people to suggest improvements even if there are no bugs that they wish to report (triggered by [this](https://www.reddit.com/r/MachineLearning/comments/55rdsj/google_research_how_robots_can_acquire_new_skills/d8d9gnf)).
 
 ## [1.0.0] - 2016-09-21
 
